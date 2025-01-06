@@ -7,4 +7,8 @@ submitBtn.addEventListener('click', getLocation)
 function getLocation() {
   locationValue = locationInput.value;
   locationInput.value = '';
+  if (!locationValue) {
+    console.log('location can not be empty');
+    return;
+  }
 }
