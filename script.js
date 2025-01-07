@@ -25,7 +25,8 @@ function getUserValues(event) {
   }
   locationValue = locationInput.value;
   if (!locationValue) {
-    console.log('location can not be empty');
+    let error = displayLoading();
+    error.textContent = `Oops an error occured location can not be empty!`
     return;
   }
   queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
