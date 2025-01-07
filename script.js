@@ -137,9 +137,9 @@ function displayCurrentDay(obj) {
   let symbol;
   if (shouldConvert) {
     obj.temp = tempConversion(obj.temp);
-    symbol = 'C';
+    symbol = '&deg;C';
   } else {
-    symbol = 'F';
+    symbol = '&deg;F';
   }
 
   divInfo.innerHTML = `
@@ -180,9 +180,9 @@ function displayForecast(arr) {
 
     let symbol;
     if (shouldConvert) {
-      symbol = 'C';
+      symbol = '&deg;C';
     } else {
-      symbol = 'F';
+      symbol = '&deg;F';
     }
   
     dayDiv.innerHTML = `
