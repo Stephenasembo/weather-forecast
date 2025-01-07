@@ -22,13 +22,13 @@ function getLocation() {
     shouldConvert = true;
   }
   locationValue = locationInput.value;
-  locationInput.value = '';
   if (!locationValue) {
     console.log('location can not be empty');
     return;
   }
   queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
   forecastLength = Number(forecastInput.value) + 1;
+  clearForm(dataConversionInput);
 }
 
 submitBtn.addEventListener('click', getWeatherData);
@@ -206,4 +206,12 @@ function displayLoading() {
 
 function tempConversion(temperature) {
   return (temperature - 32) * 5/9;
+}
+
+function clearForm(checkbox) {
+  locationInput.value = '';
+  forecastInput.value = '';
+  if (checkbox) {
+    checkbox.checked = false;
+  }
 }
