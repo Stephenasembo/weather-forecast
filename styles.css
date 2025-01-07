@@ -19,3 +19,15 @@ body {
 #weatherInfo {
   width: max-content;
 }
+
+#weatherInfo > div div {
+  border-radius: 16px;
+  padding: 16px;
+}
+
+button {
+  padding: 10px;
+  border-radius: 16px;
+  font-size: 16px;
+  margin: 5px;
+}
