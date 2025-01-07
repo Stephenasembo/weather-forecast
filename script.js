@@ -30,6 +30,7 @@ async function getWeatherData() {
       displayInfo(weatherData.today);
       displayForecast(weatherData.forecast);
       changeBackground(weatherData.today.icon);
+      changeForecastBackground(weatherData.forecast);
     }
   }
   catch (err) {
@@ -65,6 +66,27 @@ async function changeBackground(summary) {
     console.log(error);
   }
   
+}
+
+async function changeForecastBackground(infoArr) {
+  let forecastDayDivs = document.querySelectorAll('.forecastDay');
+  forecastDayDivs = Array.from(forecastDayDivs);
+  let arr = infoArr.slice(0, 2);
+  console.log(arr);
+  let imageUrlArr = [];
+  for (let day of arr) {
+    let gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${day.icon}`;
+    let response = await fetch(gifQuery, {mode: 'cors'});
+    if (response.ok) {
+      response = await response.json();
+      let imageUrl = response.data.images.original.url;
+      imageUrlArr.push(imageUrl);
+    }
+  }
+
+  for (let i = 0; i < imageUrlArr.length; i++) {
+    forecastDayDivs[i].style.backgroundImage = `url(${imageUrlArr[i]})`;
+  }
 }
 
 function displayInfo(obj) {
@@ -105,7 +127,7 @@ function displayForecast(arr) {
       today.precip = 0;
     }
     dayDiv.innerHTML = `
-    <div class = 'dataDiv'>
+    <div class = 'forecastDay'>
       <p>Today's weather condition is: ${today.conditions}.</p>
       <p>The outlook is ${today.description}.</p>
       <p>Today's temperature is: ${today.temp} F.</p>
