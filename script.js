@@ -118,7 +118,7 @@ function displayInfo(obj) {
   if (obj.snow){
       const snowPara = document.createElement('p');
       const dataDiv = document.querySelector('.dataDiv');
-      snowPara.innerHTML = `<p>The amount of snow fell or predicted to fall is ${obj.snow}.</p>`;
+      snowPara.innerHTML = `The amount of snow fell or predicted to fall is ${obj.snow}.`;
       dataDiv.appendChild(snowPara);
   }
 }
