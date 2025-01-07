@@ -24,8 +24,8 @@ async function getWeatherData() {
     if (response.ok) {
       response = await response.json();
       console.log(response)
-      let currentWeather = unpackData(response);
-      console.log(currentWeather);
+      let weatherData = unpackData(response);
+      console.log(weatherData);
     }
   }
   catch (err) {
@@ -34,6 +34,8 @@ async function getWeatherData() {
 }
 
 function unpackData(obj) {
-  let weatherConditions = {currentConditions} = obj.currentConditions;
-  return weatherConditions;
+  let today = {currentConditions} = obj.currentConditions;
+  today.description = obj.description;
+  let forecast = {nextDays} = obj.days;
+  return {today, forecast};
 }
