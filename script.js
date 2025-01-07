@@ -14,8 +14,9 @@ let forecastLength = null;
 let shouldConvert = false;
 let locationValue;
 
-submitBtn.addEventListener('click', getLocation)
-function getLocation() {
+submitBtn.addEventListener('click', getUserValues)
+function getUserValues(event) {
+  event.preventDefault();
   const dataConversionInput = document.querySelector('input[type="checkbox"]:checked');
 
   if (dataConversionInput) {
@@ -29,9 +30,9 @@ function getLocation() {
   queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
   forecastLength = Number(forecastInput.value) + 1;
   clearForm(dataConversionInput);
+  getWeatherData()
 }
 
-submitBtn.addEventListener('click', getWeatherData);
 async function getWeatherData() {
   let loadingDiv;
   try {
@@ -42,7 +43,7 @@ async function getWeatherData() {
       response = await response.json();
       console.log(response)
       let weatherData = unpackData(response);
-      displayInfo(weatherData.today);
+      displayCurrentDay(weatherData.today);
       displayForecast(weatherData.forecast);
       changeBackground(weatherData.today.icon);
       changeForecastBackground(weatherData.forecast);
@@ -88,7 +89,6 @@ async function changeBackground(summary) {
   catch (error) {
     console.log(error);
   }
-  
 }
 
 async function changeForecastBackground(infoArr) {
@@ -113,7 +113,7 @@ async function changeForecastBackground(infoArr) {
   }
 }
 
-function displayInfo(obj) {
+function displayCurrentDay(obj) {
   heading.textContent = `Displaying Weather Conditions For ${locationValue}`;
   
   const divInfo = document.querySelector('#today');
