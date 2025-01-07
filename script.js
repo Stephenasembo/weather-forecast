@@ -98,13 +98,13 @@ function displayInfo(obj) {
   divInfo.innerHTML = `
   <div class = 'dataDiv'>
     <p>Today's weather condition is: ${obj.conditions}.</p>
-    <p>The outlook is ${obj.description}.</p>
+    <p>The outlook is: ${obj.description}.</p>
     <p>Today's temperature is: ${obj.temp} F.</p>
-    <p>The cloud cover is ${obj.cloudcover} %.</p>
-    <p>The relative humidity is ${obj.humidity} %.</p>
-    <p>The visibility is ${obj.visibility}</p>
-    <p>The amount of precipitation fell or predicted to fall is ${obj.precip}.</p>
-    <p>The wind speed is ${obj.windspeed} knots.</p>
+    <p>The cloud cover is: ${obj.cloudcover} %.</p>
+    <p>The relative humidity is: ${obj.humidity} %.</p>
+    <p>The visibility is: ${obj.visibility}</p>
+    <p>The amount of precipitation fell or predicted to fall is: ${obj.precip}.</p>
+    <p>The wind speed is: ${obj.windspeed} knots.</p>
   </div>`;
 
   // Only display snow for snowy areas
@@ -130,20 +130,20 @@ function displayForecast(arr) {
     dayDiv.innerHTML = `
     <div class = 'forecastDay'>
       <p>Today's weather condition is: ${today.conditions}.</p>
-      <p>The outlook is ${today.description}.</p>
+      <p>The outlook is: ${today.description}.</p>
       <p>Today's temperature is: ${today.temp} F.</p>
-      <p>The cloud cover is ${today.cloudcover} %.</p>
-      <p>The relative humidity is ${today.humidity} %.</p>
-      <p>The visibility is ${today.visibility}</p>
-      <p>The amount of precipitation fell or predicted to fall is ${today.precip}.</p>
-      <p>The wind speed is ${today.windspeed} knots.</p>
+      <p>The cloud cover is: ${today.cloudcover} %.</p>
+      <p>The relative humidity is: ${today.humidity} %.</p>
+      <p>The visibility is: ${today.visibility}</p>
+      <p>The amount of precipitation fell or predicted to fall is: ${today.precip}.</p>
+      <p>The wind speed is: ${today.windspeed} knots.</p>
     </div>`;
   
     // Only display snow for snowy areas
     if (today.snow){
         const snowPara = document.createElement('p');
         const dataDiv = document.querySelector('.dataDiv');
-        snowPara.innerHTML = `<p>The amount of snow fell or predicted to fall is ${today.snow}.</p>`;
+        snowPara.innerHTML = `<p>The amount of snow fell or predicted to fall is: ${today.snow}.</p>`;
         dataDiv.appendChild(snowPara);
     }  
     forecastDiv.appendChild(dayDiv);
