@@ -29,4 +29,10 @@ button {
   border-radius: 16px;
   font-size: 16px;
   margin: 5px;
+  background-color: #fff;
+}
+
+button:hover {
+  background-color: #404040;
+  color: #fff;
 }
