@@ -19,7 +19,7 @@ function getLocation() {
     return;
   }
   queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
-  forecastLength = forecastInput.value;
+  forecastLength = Number(forecastInput.value) + 1;
 }
 
 submitBtn.addEventListener('click', getWeatherData);
@@ -32,7 +32,7 @@ async function getWeatherData() {
       let weatherData = unpackData(response);
       displayInfo(weatherData.today);
       displayForecast(weatherData.forecast);
-      changeBackground(weatherData.today.icon);
+      // changeBackground(weatherData.today.icon);
       changeForecastBackground(weatherData.forecast);
     }
   }
@@ -74,7 +74,7 @@ async function changeBackground(summary) {
 async function changeForecastBackground(infoArr) {
   let forecastDayDivs = document.querySelectorAll('.forecastDay');
   forecastDayDivs = Array.from(forecastDayDivs);
-  let arr = infoArr.slice(0, 2);
+  let arr = infoArr.slice(1, forecastLength);
   console.log(arr);
   let imageUrlArr = [];
   for (let day of arr) {
@@ -120,7 +120,8 @@ function displayInfo(obj) {
 }
 
 function displayForecast(arr) {
-  let array = arr.slice(0, 2);
+  let array = arr.slice(1, forecastLength);
+  console.log(array);
   for (let day of array) {
     const dayDiv = document.createElement('div');
     let {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow} = day;
