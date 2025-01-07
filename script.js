@@ -142,9 +142,8 @@ function displayForecast(arr) {
     // Only display snow for snowy areas
     if (today.snow){
         const snowPara = document.createElement('p');
-        const dataDiv = document.querySelector('.dataDiv');
         snowPara.innerHTML = `<p>The amount of snow fell or predicted to fall is: ${today.snow}.</p>`;
-        dataDiv.appendChild(snowPara);
+        dayDiv.appendChild(snowPara);
     }  
     forecastDiv.appendChild(dayDiv);
   }
