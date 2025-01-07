@@ -18,7 +18,14 @@ function getLocation() {
 
 submitBtn.addEventListener('click', getWeatherData);
 async function getWeatherData() {
-  let response = await fetch(queryUrl, {mode: 'cors'});
-  response = await response.json();
-  console.log(response);
+  try {
+    let response = await fetch(queryUrl, {mode: 'cors'});
+    if (response.ok) {
+      response = await response.json();
+      console.log(response);
+    }
+  }
+  catch (err) {
+    console.log(err)
+  }
 }
