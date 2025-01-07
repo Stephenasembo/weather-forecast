@@ -5,3 +5,7 @@ body {
 #today {
   width: max-content;
 }
+
+.forecastDay {
+  width: max-content;
+}
