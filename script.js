@@ -124,6 +124,7 @@ function displayInfo(obj) {
 
   let symbol;
   if (shouldConvert) {
+    obj.temp = tempConversion(obj.temp);
     symbol = 'C';
   } else {
     symbol = 'F';
@@ -164,10 +165,18 @@ function displayForecast(arr) {
     if (!today.precip) {
       today.precip = 0;
     }
+
+    let symbol;
+    if (shouldConvert) {
+      symbol = 'C';
+    } else {
+      symbol = 'F';
+    }
+  
     dayDiv.innerHTML = `
       <p>${date}'s weather condition is: ${today.conditions}.</p>
       <p>The outlook is: ${today.description}.</p>
-      <p>Today's temperature is: ${today.temp} F.</p>
+      <p>Today's temperature is: ${today.temp} ${symbol}.</p>
       <p>The cloud cover is: ${today.cloudcover} %.</p>
       <p>The relative humidity is: ${today.humidity} %.</p>
       <p>The visibility is: ${today.visibility}</p>
