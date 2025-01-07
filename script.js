@@ -10,10 +10,17 @@ let weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
 let gifyKey = '7uCiKGp7r7hEKsspvlhqflcCvrQHKFis';
 let weatherData = null;
 let forecastLength = null;
+let shouldConvert = false;
+let locationValue;
 
 submitBtn.addEventListener('click', getLocation)
 function getLocation() {
-  let locationValue = locationInput.value;
+  const dataConversionInput = document.querySelector('input[type="checkbox"]:checked');
+
+  if (dataConversionInput) {
+    shouldConvert = true;
+  }
+  locationValue = locationInput.value;
   locationInput.value = '';
   if (!locationValue) {
     console.log('location can not be empty');
@@ -55,6 +62,9 @@ function unpackData(obj) {
   let today = {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow};
   today.description = obj.description;
 
+  if (shouldConvert) {
+    today.temp = tempConversion(today.temp);
+  }
   let forecast = obj.days;
   return {today, forecast};
 }
@@ -111,11 +121,19 @@ function displayInfo(obj) {
   if (!obj.precip) {
     obj.precip = 0;
   }
+
+  let symbol;
+  if (shouldConvert) {
+    symbol = 'C';
+  } else {
+    symbol = 'F';
+  }
+
   divInfo.innerHTML = `
   <div class = 'dataDiv'>
     <p>Today's weather condition is: ${obj.conditions}.</p>
     <p>The outlook is: ${obj.description}.</p>
-    <p>Today's temperature is: ${obj.temp} F.</p>
+    <p>Today's temperature is: ${obj.temp} ${symbol}.</p>
     <p>The cloud cover is: ${obj.cloudcover} %.</p>
     <p>The relative humidity is: ${obj.humidity} %.</p>
     <p>The visibility is: ${obj.visibility}</p>
@@ -177,4 +195,8 @@ function displayLoading() {
   weatherInfo.appendChild(div);
   div.classList.add('loading');
   return div;
+}
+
+function tempConversion(temperature) {
+  return (temperature - 32) * 5/9;
 }
