@@ -3,15 +3,19 @@ body {
 }
 
 #today {
-  width: max-content;
+  width: 100%;
 }
 
 .forecastDay {
-  width: max-content;
+  width: 100%;
 }
 
 #weatherInfo div{
   background-color: rgba(255, 255, 255, 0.6);
   background-blend-mode: lighten;
   font-weight: 800;
+}
+
+#weatherInfo {
+  width: max-content;
 }
