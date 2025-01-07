@@ -130,12 +130,13 @@ function displayForecast(arr) {
     let today = {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow};
     today.description = day.description;
 
+    let date = day.datetime;
     if (!today.precip) {
       today.precip = 0;
     }
     dayDiv.innerHTML = `
     <div class = 'forecastDay'>
-      <p>Today's weather condition is: ${today.conditions}.</p>
+      <p>${date}'s weather condition is: ${today.conditions}.</p>
       <p>The outlook is: ${today.description}.</p>
       <p>Today's temperature is: ${today.temp} F.</p>
       <p>The cloud cover is: ${today.cloudcover} %.</p>
