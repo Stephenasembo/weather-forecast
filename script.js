@@ -160,6 +160,8 @@ function displayForecast(arr) {
 }
 
 function displayLoading() {
+  todayDiv.innerHTML = '';
+  forecastDiv.innerHTML = '';
   const div = document.createElement('div');
   div.textContent = 'Wait a moment while we load your data';
   weatherInfo.appendChild(div);
