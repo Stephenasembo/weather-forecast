@@ -86,6 +86,7 @@ async function changeForecastBackground(infoArr) {
 
   for (let i = 0; i < imageUrlArr.length; i++) {
     forecastDayDivs[i].style.backgroundImage = `url(${imageUrlArr[i]})`;
+    forecastDayDivs[i].style.backgroundSize = 'cover';
   }
 }
 
