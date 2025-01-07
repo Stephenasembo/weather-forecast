@@ -80,8 +80,9 @@ async function changeBackground(summary) {
       response = await response.json();
       console.log(response);  
       let imageUrl = response.data.images.original.url;
-      todayDiv.style.backgroundImage = `url(${imageUrl})`;
-      todayDiv.style.backgroundSize = 'cover';
+      const div = document.querySelector('.dataDiv')
+      div.style.backgroundImage = `url(${imageUrl})`;
+      div.style.backgroundSize = 'cover';
     }
   }
   catch (error) {
@@ -164,7 +165,6 @@ function displayForecast(arr) {
       today.precip = 0;
     }
     dayDiv.innerHTML = `
-    <div class = 'forecastDay'>
       <p>${date}'s weather condition is: ${today.conditions}.</p>
       <p>The outlook is: ${today.description}.</p>
       <p>Today's temperature is: ${today.temp} F.</p>
@@ -172,17 +172,16 @@ function displayForecast(arr) {
       <p>The relative humidity is: ${today.humidity} %.</p>
       <p>The visibility is: ${today.visibility}</p>
       <p>The amount of precipitation fell or predicted to fall is: ${today.precip}.</p>
-      <p>The wind speed is: ${today.windspeed} knots.</p>
-    </div>`;
+      <p>The wind speed is: ${today.windspeed} knots.</p>`;
   
     // Only display snow for snowy areas
     if (today.snow){
-      const parentDiv = document.querySelector('.forecastDay')
       const snowPara = document.createElement('p');
-      snowPara.innerHTML = `<p>The amount of snow fell or predicted to fall is: ${today.snow}.</p>`;
-      parentDiv.appendChild(snowPara);
+      snowPara.innerHTML = `The amount of snow fell or predicted to fall is: ${today.snow}.`;
+      dayDiv.appendChild(snowPara);
     }  
     forecastDiv.appendChild(dayDiv);
+    dayDiv.classList.add('forecastDay');
   }
 }
 
