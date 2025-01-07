@@ -2,11 +2,13 @@ const locationInput = document.querySelector('input');
 const submitBtn = document.querySelector('#submitBtn');
 const todayDiv = document.querySelector('#today');
 const forecastDiv = document.querySelector('#forecast');
+const forecastInput = document.querySelector('#forecastLength');
 
 let queryUrl;
 let weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
 let gifyKey = '7uCiKGp7r7hEKsspvlhqflcCvrQHKFis';
 let weatherData = null;
+let forecastLength = null;
 
 submitBtn.addEventListener('click', getLocation)
 function getLocation() {
@@ -16,7 +18,8 @@ function getLocation() {
     console.log('location can not be empty');
     return;
   }
-  queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`
+  queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
+  forecastLength = forecastInput.value;
 }
 
 submitBtn.addEventListener('click', getWeatherData);
