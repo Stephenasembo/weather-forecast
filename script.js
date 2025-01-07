@@ -1,6 +1,6 @@
 const locationInput = document.querySelector('input');
 const submitBtn = document.querySelector('#submitBtn');
-const image = document.querySelector('img');
+const todayDiv = document.querySelector('#today');
 
 let queryUrl;
 let weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
@@ -27,7 +27,7 @@ async function getWeatherData() {
       console.log(response)
       let weatherData = unpackData(response);
       displayInfo(weatherData.today);
-      //changeBackground(weatherData.today.currentConditions.icon);
+      changeBackground(weatherData.today.icon);
     }
   }
   catch (err) {
@@ -45,6 +45,7 @@ function unpackData(obj) {
   return {today, forecast};
 }
 
+// Use a gif as background image
 async function changeBackground(summary) {
   let backgroundImg = summary;
   let gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${backgroundImg}`;
@@ -53,7 +54,8 @@ async function changeBackground(summary) {
     if (response.ok) {
       response = await response.json();
       console.log(response);  
-      image.src = response.data.images.original.url;
+      let imageUrl = response.data.images.original.url;
+      todayDiv.style.backgroundImage = `url(${imageUrl})`;
     }
   }
   catch (error) {
