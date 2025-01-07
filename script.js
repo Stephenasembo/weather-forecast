@@ -95,6 +95,7 @@ async function changeForecastBackground(infoArr) {
 
 function displayInfo(obj) {
   const divInfo = document.querySelector('#today');
+  divInfo.innerHTML = '';
   if (!obj.precip) {
     obj.precip = 0;
   }
@@ -120,6 +121,7 @@ function displayInfo(obj) {
 }
 
 function displayForecast(arr) {
+  forecastDiv.innerHTML = '';
   let array = arr.slice(1, forecastLength);
   console.log(array);
   for (let day of array) {
