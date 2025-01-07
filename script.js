@@ -99,6 +99,10 @@ async function changeForecastBackground(infoArr) {
 }
 
 function displayInfo(obj) {
+  let heading = document.createElement('h2');
+  heading.textContent = `Displaying Weather Conditions For ${locationValue}`;
+  weatherInfo.appendChild(heading);
+  
   const divInfo = document.querySelector('#today');
   divInfo.innerHTML = '';
   if (!obj.precip) {
