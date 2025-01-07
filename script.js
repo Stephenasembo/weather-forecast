@@ -3,6 +3,7 @@ const submitBtn = document.querySelector('#submitBtn');
 
 let queryUrl;
 let myKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
+let weatherData = null;
 
 submitBtn.addEventListener('click', getLocation)
 function getLocation() {
@@ -22,10 +23,17 @@ async function getWeatherData() {
     let response = await fetch(queryUrl, {mode: 'cors'});
     if (response.ok) {
       response = await response.json();
-      console.log(response);
+      console.log(response)
+      let currentWeather = unpackData(response);
+      console.log(currentWeather);
     }
   }
   catch (err) {
     console.log(err)
   }
+}
+
+function unpackData(obj) {
+  let weatherConditions = {currentConditions} = obj.currentConditions;
+  return weatherConditions;
 }
