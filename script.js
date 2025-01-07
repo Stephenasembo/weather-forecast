@@ -5,6 +5,7 @@ const forecastDiv = document.querySelector('#forecast');
 const forecastInput = document.querySelector('#forecastLength');
 const weatherInfo = document.querySelector('#weatherInfo');
 const heading = document.querySelector('#heading');
+let errorDivs = [];
 
 let queryUrl;
 let weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
@@ -39,7 +40,9 @@ async function getWeatherData() {
     loadingDiv = displayLoading();
     let response = await fetch(queryUrl, {mode: 'cors'});
     if (response.ok) {
-      weatherInfo.removeChild(loadingDiv);
+      for (let div of errorDivs){
+        removeError(div);
+      }
       response = await response.json();
       console.log(response)
       let weatherData = unpackData(response);
@@ -204,6 +207,7 @@ function displayLoading() {
   div.textContent = 'Wait a moment while we load your data';
   weatherInfo.appendChild(div);
   div.classList.add('loading');
+  errorDivs.push(div);
   return div;
 }
 
@@ -217,4 +221,8 @@ function clearForm(checkbox) {
   if (checkbox) {
     checkbox.checked = false;
   }
+}
+
+function removeError(element) {
+  weatherInfo.removeChild(element)
 }
