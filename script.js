@@ -39,6 +39,9 @@ async function getWeatherData() {
       changeBackground(weatherData.today.icon);
       changeForecastBackground(weatherData.forecast);
     }
+    else {
+      loadingDiv.textContent = 'Oops an error occured!';
+    }
   }
   catch (err) {
     console.log(err);
