@@ -29,7 +29,7 @@ function getUserValues(event) {
     error.textContent = `Oops an error occured location can not be empty!`
     return;
   }
-  if (forecastInput.value < 0 || forecastInput.value > 15) {
+  if (forecastInput.value < 0 || forecastInput.value > 14) {
     let error = displayLoading();
     error.textContent = `Oops an error occured! Minimum days for forecast is 0 and maximum is 15!`
     return;
