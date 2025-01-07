@@ -3,6 +3,7 @@ const submitBtn = document.querySelector('#submitBtn');
 const todayDiv = document.querySelector('#today');
 const forecastDiv = document.querySelector('#forecast');
 const forecastInput = document.querySelector('#forecastLength');
+const weatherInfo = document.querySelector('#weatherInfo');
 
 let queryUrl;
 let weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
@@ -25,14 +26,16 @@ function getLocation() {
 submitBtn.addEventListener('click', getWeatherData);
 async function getWeatherData() {
   try {
+    let loadingDiv = displayLoading();
     let response = await fetch(queryUrl, {mode: 'cors'});
     if (response.ok) {
+      weatherInfo.removeChild(loadingDiv);
       response = await response.json();
       console.log(response)
       let weatherData = unpackData(response);
       displayInfo(weatherData.today);
       displayForecast(weatherData.forecast);
-      // changeBackground(weatherData.today.icon);
+      changeBackground(weatherData.today.icon);
       changeForecastBackground(weatherData.forecast);
     }
   }
@@ -154,4 +157,12 @@ function displayForecast(arr) {
     }  
     forecastDiv.appendChild(dayDiv);
   }
+}
+
+function displayLoading() {
+  const div = document.createElement('div');
+  div.textContent = 'Wait a moment while we load your data';
+  weatherInfo.appendChild(div);
+  div.classList.add('loading');
+  return div;
 }
