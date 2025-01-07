@@ -66,7 +66,16 @@ async function changeBackground(summary) {
 
 function displayInfo(obj) {
   const divInfo = document.querySelector('#today');
-  for (let condition in obj){
-    divInfo.textContent += obj[condition] + ' ';
-  }
+  divInfo.innerHTML = `
+  <div>
+    <p>Today's weather condition is: ${obj.conditions}.</p>
+    <p>The outlook is ${obj.description}.</p>
+    <p>Today's temperature is: ${obj.temp} F.</p>
+    <p>The cloud cover is ${obj.cloudcover} %.</p>
+    <p>The relative humidity is ${obj.humidity} %.</p>
+    <p>The visibility is ${obj.visibility}</p>
+    <p>The amount of precipitation fell or predicted to fall is ${obj.precip}.</p>
+    <p>The wind speed is ${obj.windspeed} knots.</p>
+    <p>The amount of snow fell or predicted to fall is ${obj.snow}.</p>
+</div>`;
 }
