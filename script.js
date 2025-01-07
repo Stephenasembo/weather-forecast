@@ -1,6 +1,7 @@
 const locationInput = document.querySelector('input');
 const submitBtn = document.querySelector('#submitBtn');
 const todayDiv = document.querySelector('#today');
+const forecastDiv = document.querySelector('#forecast');
 
 let queryUrl;
 let weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
@@ -27,6 +28,7 @@ async function getWeatherData() {
       console.log(response)
       let weatherData = unpackData(response);
       displayInfo(weatherData.today);
+      displayForecast(weatherData.forecast);
       changeBackground(weatherData.today.icon);
     }
   }
@@ -41,7 +43,7 @@ function unpackData(obj) {
   let today = {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow};
   today.description = obj.description;
 
-  let forecast = {nextDays} = obj.days;
+  let forecast = obj.days;
   return {today, forecast};
 }
 
@@ -88,5 +90,39 @@ function displayInfo(obj) {
       const dataDiv = document.querySelector('.dataDiv');
       snowPara.innerHTML = `<p>The amount of snow fell or predicted to fall is ${obj.snow}.</p>`;
       dataDiv.appendChild(snowPara);
+  }
+}
+
+function displayForecast(arr) {
+  let array = arr.slice(0, 2);
+  for (let day of array) {
+    const dayDiv = document.createElement('div');
+    let {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow} = day;
+    let today = {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow};
+    today.description = day.description;
+
+    if (!today.precip) {
+      today.precip = 0;
+    }
+    dayDiv.innerHTML = `
+    <div class = 'dataDiv'>
+      <p>Today's weather condition is: ${today.conditions}.</p>
+      <p>The outlook is ${today.description}.</p>
+      <p>Today's temperature is: ${today.temp} F.</p>
+      <p>The cloud cover is ${today.cloudcover} %.</p>
+      <p>The relative humidity is ${today.humidity} %.</p>
+      <p>The visibility is ${today.visibility}</p>
+      <p>The amount of precipitation fell or predicted to fall is ${today.precip}.</p>
+      <p>The wind speed is ${today.windspeed} knots.</p>
+    </div>`;
+  
+    // Only display snow for snowy areas
+    if (today.snow){
+        const snowPara = document.createElement('p');
+        const dataDiv = document.querySelector('.dataDiv');
+        snowPara.innerHTML = `<p>The amount of snow fell or predicted to fall is ${today.snow}.</p>`;
+        dataDiv.appendChild(snowPara);
+    }  
+    forecastDiv.appendChild(dayDiv);
   }
 }
