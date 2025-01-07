@@ -25,8 +25,9 @@ function getLocation() {
 
 submitBtn.addEventListener('click', getWeatherData);
 async function getWeatherData() {
+  let loadingDiv;
   try {
-    let loadingDiv = displayLoading();
+    loadingDiv = displayLoading();
     let response = await fetch(queryUrl, {mode: 'cors'});
     if (response.ok) {
       weatherInfo.removeChild(loadingDiv);
@@ -40,7 +41,8 @@ async function getWeatherData() {
     }
   }
   catch (err) {
-    console.log(err)
+    console.log(err);
+    loadingDiv.textContent = 'Oops an error occured!';
   }
 }
 
