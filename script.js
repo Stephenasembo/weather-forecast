@@ -16,7 +16,6 @@ function getLocation() {
     return;
   }
   queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`
-  console.log(queryUrl);
 }
 
 submitBtn.addEventListener('click', getWeatherData);
@@ -27,8 +26,8 @@ async function getWeatherData() {
       response = await response.json();
       console.log(response)
       let weatherData = unpackData(response);
-      console.log(weatherData);
-      changeBackground(weatherData.today.icon);
+      displayInfo(weatherData.today);
+      //changeBackground(weatherData.today.currentConditions.icon);
     }
   }
   catch (err) {
@@ -36,9 +35,12 @@ async function getWeatherData() {
   }
 }
 
+// Retrieve the essential weather data
 function unpackData(obj) {
-  let today = {currentConditions} = obj.currentConditions;
+  let {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow} = obj.currentConditions;
+  let today = {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow};
   today.description = obj.description;
+
   let forecast = {nextDays} = obj.days;
   return {today, forecast};
 }
@@ -52,11 +54,17 @@ async function changeBackground(summary) {
       response = await response.json();
       console.log(response);  
       image.src = response.data.images.original.url;
-      console.log(image.src);
     }
   }
   catch (error) {
     console.log(error);
   }
   
+}
+
+function displayInfo(obj) {
+  const divInfo = document.querySelector('#today');
+  for (let condition in obj){
+    divInfo.textContent += obj[condition] + ' ';
+  }
 }
