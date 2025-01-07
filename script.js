@@ -4,6 +4,7 @@ const todayDiv = document.querySelector('#today');
 const forecastDiv = document.querySelector('#forecast');
 const forecastInput = document.querySelector('#forecastLength');
 const weatherInfo = document.querySelector('#weatherInfo');
+const heading = document.querySelector('#heading');
 
 let queryUrl;
 let weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
@@ -112,9 +113,7 @@ async function changeForecastBackground(infoArr) {
 }
 
 function displayInfo(obj) {
-  let heading = document.createElement('h2');
   heading.textContent = `Displaying Weather Conditions For ${locationValue}`;
-  weatherInfo.appendChild(heading);
   
   const divInfo = document.querySelector('#today');
   divInfo.innerHTML = '';
