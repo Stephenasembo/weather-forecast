@@ -56,6 +56,7 @@ async function changeBackground(summary) {
       console.log(response);  
       let imageUrl = response.data.images.original.url;
       todayDiv.style.backgroundImage = `url(${imageUrl})`;
+      todayDiv.style.backgroundSize = 'cover';
     }
   }
   catch (error) {
@@ -66,8 +67,11 @@ async function changeBackground(summary) {
 
 function displayInfo(obj) {
   const divInfo = document.querySelector('#today');
+  if (!obj.precip) {
+    obj.precip = 0;
+  }
   divInfo.innerHTML = `
-  <div>
+  <div class = 'dataDiv'>
     <p>Today's weather condition is: ${obj.conditions}.</p>
     <p>The outlook is ${obj.description}.</p>
     <p>Today's temperature is: ${obj.temp} F.</p>
@@ -76,6 +80,13 @@ function displayInfo(obj) {
     <p>The visibility is ${obj.visibility}</p>
     <p>The amount of precipitation fell or predicted to fall is ${obj.precip}.</p>
     <p>The wind speed is ${obj.windspeed} knots.</p>
-    <p>The amount of snow fell or predicted to fall is ${obj.snow}.</p>
-</div>`;
+  </div>`;
+
+  // Only display snow for snowy areas
+  if (obj.snow){
+      const snowPara = document.createElement('p');
+      const dataDiv = document.querySelector('.dataDiv');
+      snowPara.innerHTML = `<p>The amount of snow fell or predicted to fall is ${obj.snow}.</p>`;
+      dataDiv.appendChild(snowPara);
+  }
 }
