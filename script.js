@@ -48,6 +48,9 @@ async function getWeatherData() {
       changeBackground(weatherData.today.icon);
       changeForecastBackground(weatherData.forecast);
     }
+    else if (response.status == 400) {
+      loadingDiv.textContent = 'Oops an error occured! Location entered may be invalid.';
+    }
     else {
       loadingDiv.textContent = 'Oops an error occured!';
     }
