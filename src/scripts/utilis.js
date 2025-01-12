@@ -1,5 +1,9 @@
 import domElements from './dom';
 
+const apiKeys = {
+  weatherKey: '28SUAPEDEBK3W6FMPLKTFMRFY',
+  gifyKey: '7uCiKGp7r7hEKsspvlhqflcCvrQHKFis',
+}
 function clearForm(checkbox) {
   domElements.locationInput.value = '';
   domElements.forecastInput.value = '';
@@ -48,4 +52,4 @@ function unpackData(obj) {
   return { today, forecast };
 }
 
-export { clearForm, tempConversion };
+export { clearForm, tempConversion, unpackData, apiKeys };

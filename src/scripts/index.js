@@ -2,11 +2,11 @@ import domElements from './dom';
 import {
   displayLoading, removeError, displayCurrentDay,
   displayForecast, changeBackground, changeForecastBackground,
+  errorDivs,
 } from './ui';
+import { clearForm, tempConversion, unpackData, apiKeys } from './utilis';
 
 let queryUrl;
-const weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
-const gifyKey = '7uCiKGp7r7hEKsspvlhqflcCvrQHKFis';
 let forecastLength = null;
 let shouldConvert = false;
 let locationValue;
@@ -57,7 +57,7 @@ function getUserValues(event) {
     error.textContent = 'Oops an error occured! Minimum days for forecast is 0 and maximum is 15!';
     return;
   }
-  queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
+  queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${apiKeys.weatherKey}`;
   forecastLength = Number(domElements.forecastInput.value) + 1;
   clearForm(dataConversionInput);
   getWeatherData();

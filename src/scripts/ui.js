@@ -1,4 +1,5 @@
 import domElements from './dom';
+import { apiKeys } from './utilis';
 
 const errorDivs = [];
 
@@ -118,7 +119,7 @@ function displayForecast(arr) {
 // Use a gif as background image
 async function changeBackground(summary) {
   const backgroundImg = summary;
-  const gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${backgroundImg}`;
+  const gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${apiKeys.gifyKey}&s=${backgroundImg}`;
   try {
     let response = await fetch(gifQuery, { mode: 'cors' });
     if (response.ok) {
@@ -161,5 +162,6 @@ async function changeForecastBackground(infoArr) {
 
 export {
   displayLoading, removeError, displayCurrentDay,
-  displayForecast, changeBackground, changeForecastBackground
+  displayForecast, changeBackground, changeForecastBackground,
+  errorDivs,
 };
