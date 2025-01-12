@@ -1,6 +1,6 @@
-let errorDivs = [];
+const errorDivs = [];
 
-const domElements = (function () {
+const domElements = (function cacheDomElements() {
   const locationInput = document.querySelector('input');
   const submitBtn = document.querySelector('#submitBtn');
   const todayDiv = document.querySelector('#today');
@@ -18,74 +18,46 @@ const domElements = (function () {
     weatherInfo,
     heading,
   };
-})();
+}());
 
 let queryUrl;
-let weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
-let gifyKey = '7uCiKGp7r7hEKsspvlhqflcCvrQHKFis';
-let weatherData = null;
+const weatherKey = '28SUAPEDEBK3W6FMPLKTFMRFY';
+const gifyKey = '7uCiKGp7r7hEKsspvlhqflcCvrQHKFis';
 let forecastLength = null;
 let shouldConvert = false;
 let locationValue;
 
-domElements.submitBtn.addEventListener('click', getUserValues);
-function getUserValues(event) {
-  event.preventDefault();
-  const dataConversionInput = document.querySelector(
-    'input[type="checkbox"]:checked',
-  );
-
-  if (dataConversionInput) {
-    shouldConvert = true;
-  }
-  locationValue = domElements.locationInput.value;
-  if (!locationValue) {
-    let error = displayLoading();
-    error.textContent = `Oops an error occured location can not be empty!`;
-    return;
-  }
-  if (forecastInput.value < 0 || forecastInput.value > 14) {
-    let error = displayLoading();
-    error.textContent = `Oops an error occured! Minimum days for forecast is 0 and maximum is 15!`;
-    return;
-  }
-  queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
-  forecastLength = Number(domElements.forecastInput.value) + 1;
-  clearForm(dataConversionInput);
-  getWeatherData();
+function displayLoading() {
+  domElements.todayDiv.innerHTML = '';
+  domElements.forecastDiv.innerHTML = '';
+  const div = document.createElement('div');
+  div.textContent = 'Wait a moment while we load your data';
+  domElements.weatherInfo.appendChild(div);
+  div.classList.add('loading');
+  errorDivs.push(div);
+  return div;
 }
 
-async function getWeatherData() {
-  let loadingDiv;
-  try {
-    loadingDiv = displayLoading();
-    let response = await fetch(queryUrl, { mode: 'cors' });
-    if (response.ok) {
-      for (let div of errorDivs) {
-        removeError(div);
-      }
-      response = await response.json();
-      console.log(response);
-      let weatherData = unpackData(response);
-      displayCurrentDay(weatherData.today);
-      displayForecast(weatherData.forecast);
-      changeBackground(weatherData.today.icon);
-      changeForecastBackground(weatherData.forecast);
-    } else if (response.status == 400) {
-      loadingDiv.textContent =
-        'Oops an error occured! Location entered may be invalid.';
-    } else {
-      loadingDiv.textContent = 'Oops an error occured!';
-    }
-  } catch (err) {
-    console.log(err);
-    loadingDiv.textContent = 'Oops an error occured!';
+function clearForm(checkbox) {
+  domElements.locationInput.value = '';
+  domElements.forecastInput.value = '';
+  const checkboxInput = checkbox;
+  if (checkboxInput) {
+    checkboxInput.checked = false;
   }
+}
+
+function tempConversion(temperature) {
+  return ((temperature - 32) * 5) / 9;
+}
+
+function removeError(element) {
+  domElements.weatherInfo.removeChild(element);
 }
 
 // Retrieve the essential weather data
 function unpackData(obj) {
-  let {
+  const {
     temp,
     conditions,
     cloudcover,
@@ -97,7 +69,7 @@ function unpackData(obj) {
     precip,
     snow,
   } = obj.currentConditions;
-  let today = {
+  const today = {
     temp,
     conditions,
     cloudcover,
@@ -114,63 +86,22 @@ function unpackData(obj) {
   if (shouldConvert) {
     today.temp = tempConversion(today.temp);
   }
-  let forecast = obj.days;
+  const forecast = obj.days;
   return { today, forecast };
-}
-
-// Use a gif as background image
-async function changeBackground(summary) {
-  let backgroundImg = summary;
-  let gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${backgroundImg}`;
-  try {
-    let response = await fetch(gifQuery, { mode: 'cors' });
-    if (response.ok) {
-      response = await response.json();
-      console.log(response);
-      let imageUrl = response.data.images.original.url;
-      const div = document.querySelector('.dataDiv');
-      div.style.backgroundImage = `url(${imageUrl})`;
-      div.style.backgroundSize = 'cover';
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-async function changeForecastBackground(infoArr) {
-  let forecastDayDivs = document.querySelectorAll('.forecastDay');
-  forecastDayDivs = Array.from(forecastDayDivs);
-  let arr = infoArr.slice(1, forecastLength);
-  console.log(arr);
-  let imageUrlArr = [];
-  for (let day of arr) {
-    let gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${day.icon}`;
-    let response = await fetch(gifQuery, { mode: 'cors' });
-    if (response.ok) {
-      response = await response.json();
-      let imageUrl = response.data.images.original.url;
-      imageUrlArr.push(imageUrl);
-    }
-  }
-
-  for (let i = 0; i < imageUrlArr.length; i++) {
-    forecastDayDivs[i].style.backgroundImage = `url(${imageUrlArr[i]})`;
-    forecastDayDivs[i].style.backgroundSize = 'cover';
-  }
 }
 
 function displayCurrentDay(obj) {
   domElements.heading.textContent = `Displaying Weather Conditions For ${locationValue}`;
 
-  // const divInfo = document.querySelector('#today');
   domElements.todayDiv.innerHTML = '';
-  if (!obj.precip) {
-    obj.precip = 0;
+  const newObj = obj;
+  if (!newObj.precip) {
+    newObj.precip = 0;
   }
 
   let symbol;
   if (shouldConvert) {
-    obj.temp = tempConversion(obj.temp);
+    newObj.temp = tempConversion(obj.temp);
     symbol = '&deg;C';
   } else {
     symbol = '&deg;F';
@@ -199,11 +130,10 @@ function displayCurrentDay(obj) {
 
 function displayForecast(arr) {
   domElements.forecastDiv.innerHTML = '';
-  let array = arr.slice(1, forecastLength);
-  console.log(array);
-  for (let day of array) {
+  const array = arr.slice(1, forecastLength);
+  array.forEach((day) => {
     const dayDiv = document.createElement('div');
-    let {
+    const {
       temp,
       conditions,
       cloudcover,
@@ -215,7 +145,7 @@ function displayForecast(arr) {
       precip,
       snow,
     } = day;
-    let today = {
+    const today = {
       temp,
       conditions,
       cloudcover,
@@ -228,19 +158,16 @@ function displayForecast(arr) {
       snow,
     };
     today.description = day.description;
-
-    let date = day.datetime;
+    const date = day.datetime;
     if (!today.precip) {
       today.precip = 0;
     }
-
     let symbol;
     if (shouldConvert) {
       symbol = '&deg;C';
     } else {
       symbol = '&deg;F';
     }
-
     dayDiv.innerHTML = `
       <p>${date}'s weather condition is: ${today.conditions}.</p>
       <p>The outlook is: ${today.description}.</p>
@@ -250,7 +177,6 @@ function displayForecast(arr) {
       <p>The visibility is: ${today.visibility}</p>
       <p>The amount of precipitation fell or predicted to fall is: ${today.precip}.</p>
       <p>The wind speed is: ${today.windspeed} knots.</p>`;
-
     // Only display snow for snowy areas
     if (today.snow) {
       const snowPara = document.createElement('p');
@@ -259,32 +185,103 @@ function displayForecast(arr) {
     }
     domElements.forecastDiv.appendChild(dayDiv);
     dayDiv.classList.add('forecastDay');
+  });
+}
+
+// Use a gif as background image
+async function changeBackground(summary) {
+  const backgroundImg = summary;
+  const gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${backgroundImg}`;
+  try {
+    let response = await fetch(gifQuery, { mode: 'cors' });
+    if (response.ok) {
+      response = await response.json();
+      const imageUrl = response.data.images.original.url;
+      const div = document.querySelector('.dataDiv');
+      div.style.backgroundImage = `url(${imageUrl})`;
+      div.style.backgroundSize = 'cover';
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
-function displayLoading() {
-  domElements.todayDiv.innerHTML = '';
-  domElements.forecastDiv.innerHTML = '';
-  const div = document.createElement('div');
-  div.textContent = 'Wait a moment while we load your data';
-  weatherInfo.appendChild(div);
-  div.classList.add('loading');
-  errorDivs.push(div);
-  return div;
-}
+async function changeForecastBackground(infoArr) {
+  let forecastDayDivs = document.querySelectorAll('.forecastDay');
+  forecastDayDivs = Array.from(forecastDayDivs);
+  const arr = infoArr.slice(1, forecastLength);
+  const imageUrlArr = [];
 
-function tempConversion(temperature) {
-  return ((temperature - 32) * 5) / 9;
-}
+  arr.forEach((day) => {
+    const gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${day.icon}`;
+    fetch(gifQuery, { mode: 'cors' })
+      .then((responseResult) => {
+        if (responseResult.ok) {
+          responseResult.json()
+            .then((responseData) => {
+              const imageUrl = responseData.data.images.original.url;
+              imageUrlArr.push(imageUrl);
+            });
+        }
+      });
+  });
 
-function clearForm(checkbox) {
-  domElements.locationInput.value = '';
-  domElements.forecastInput.value = '';
-  if (checkbox) {
-    checkbox.checked = false;
+  for (let i = 0; i < imageUrlArr.length; i += 1) {
+    forecastDayDivs[i].style.backgroundImage = `url(${imageUrlArr[i]})`;
+    forecastDayDivs[i].style.backgroundSize = 'cover';
   }
 }
 
-function removeError(element) {
-  weatherInfo.removeChild(element);
+async function getWeatherData() {
+  let loadingDiv;
+  try {
+    loadingDiv = displayLoading();
+    let response = await fetch(queryUrl, { mode: 'cors' });
+    if (response.ok) {
+      errorDivs.forEach((div) => {
+        removeError(div);
+      });
+      response = await response.json();
+      const weatherData = unpackData(response);
+      displayCurrentDay(weatherData.today);
+      displayForecast(weatherData.forecast);
+      changeBackground(weatherData.today.icon);
+      changeForecastBackground(weatherData.forecast);
+    } else if (response.status === 400) {
+      loadingDiv.textContent = `Oops an error occured!
+      Location entered may be invalid.`;
+    } else {
+      loadingDiv.textContent = 'Oops an error occured!';
+    }
+  } catch (err) {
+    loadingDiv.textContent = 'Oops an error occured!';
+  }
 }
+
+function getUserValues(event) {
+  event.preventDefault();
+  const dataConversionInput = document.querySelector(
+    'input[type="checkbox"]:checked',
+  );
+
+  if (dataConversionInput) {
+    shouldConvert = true;
+  }
+  locationValue = domElements.locationInput.value;
+  if (!locationValue) {
+    const error = displayLoading();
+    error.textContent = 'Oops an error occured location can not be empty!';
+    return;
+  }
+  if (domElements.forecastInput.value < 0 || domElements.forecastInput.value > 14) {
+    const error = displayLoading();
+    error.textContent = 'Oops an error occured! Minimum days for forecast is 0 and maximum is 15!';
+    return;
+  }
+  queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
+  forecastLength = Number(domElements.forecastInput.value) + 1;
+  clearForm(dataConversionInput);
+  getWeatherData();
+}
+
+domElements.submitBtn.addEventListener('click', getUserValues);
