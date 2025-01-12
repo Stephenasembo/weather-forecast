@@ -1,6 +1,6 @@
 let errorDivs = [];
 
-(function domElements() {
+const domElements = (function () {
   const locationInput = document.querySelector('input');
   const submitBtn = document.querySelector('#submitBtn');
   const todayDiv = document.querySelector('#today');
@@ -28,7 +28,7 @@ let forecastLength = null;
 let shouldConvert = false;
 let locationValue;
 
-submitBtn.addEventListener('click', getUserValues)
+domElements.submitBtn.addEventListener('click', getUserValues)
 function getUserValues(event) {
   event.preventDefault();
   const dataConversionInput = document.querySelector('input[type="checkbox"]:checked');
@@ -36,7 +36,7 @@ function getUserValues(event) {
   if (dataConversionInput) {
     shouldConvert = true;
   }
-  locationValue = locationInput.value;
+  locationValue = domElements.locationInput.value;
   if (!locationValue) {
     let error = displayLoading();
     error.textContent = `Oops an error occured location can not be empty!`
@@ -48,7 +48,7 @@ function getUserValues(event) {
     return;
   }
   queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
-  forecastLength = Number(forecastInput.value) + 1;
+  forecastLength = Number(domElements.forecastInput.value) + 1;
   clearForm(dataConversionInput);
   getWeatherData()
 }
@@ -139,10 +139,10 @@ async function changeForecastBackground(infoArr) {
 }
 
 function displayCurrentDay(obj) {
-  heading.textContent = `Displaying Weather Conditions For ${locationValue}`;
+  domElements.heading.textContent = `Displaying Weather Conditions For ${locationValue}`;
   
-  const divInfo = document.querySelector('#today');
-  divInfo.innerHTML = '';
+  // const divInfo = document.querySelector('#today');
+  domElements.todayDiv.innerHTML = '';
   if (!obj.precip) {
     obj.precip = 0;
   }
@@ -155,7 +155,7 @@ function displayCurrentDay(obj) {
     symbol = '&deg;F';
   }
 
-  divInfo.innerHTML = `
+  domElements.todayDiv.innerHTML = `
   <div class = 'dataDiv'>
     <p>Today's weather condition is: ${obj.conditions}.</p>
     <p>The outlook is: ${obj.description}.</p>
@@ -177,7 +177,7 @@ function displayCurrentDay(obj) {
 }
 
 function displayForecast(arr) {
-  forecastDiv.innerHTML = '';
+  domElements.forecastDiv.innerHTML = '';
   let array = arr.slice(1, forecastLength);
   console.log(array);
   for (let day of array) {
@@ -214,14 +214,14 @@ function displayForecast(arr) {
       snowPara.innerHTML = `The amount of snow fell or predicted to fall is: ${today.snow}.`;
       dayDiv.appendChild(snowPara);
     }  
-    forecastDiv.appendChild(dayDiv);
+    domElements.forecastDiv.appendChild(dayDiv);
     dayDiv.classList.add('forecastDay');
   }
 }
 
 function displayLoading() {
-  todayDiv.innerHTML = '';
-  forecastDiv.innerHTML = '';
+  domElements.todayDiv.innerHTML = '';
+  domElements.forecastDiv.innerHTML = '';
   const div = document.createElement('div');
   div.textContent = 'Wait a moment while we load your data';
   weatherInfo.appendChild(div);
@@ -235,8 +235,8 @@ function tempConversion(temperature) {
 }
 
 function clearForm(checkbox) {
-  locationInput.value = '';
-  forecastInput.value = '';
+  domElements.locationInput.value = '';
+  domElements.forecastInput.value = '';
   if (checkbox) {
     checkbox.checked = false;
   }
