@@ -17,7 +17,7 @@ const domElements = (function () {
     forecastInput,
     weatherInfo,
     heading,
-  }
+  };
 })();
 
 let queryUrl;
@@ -28,10 +28,12 @@ let forecastLength = null;
 let shouldConvert = false;
 let locationValue;
 
-domElements.submitBtn.addEventListener('click', getUserValues)
+domElements.submitBtn.addEventListener('click', getUserValues);
 function getUserValues(event) {
   event.preventDefault();
-  const dataConversionInput = document.querySelector('input[type="checkbox"]:checked');
+  const dataConversionInput = document.querySelector(
+    'input[type="checkbox"]:checked',
+  );
 
   if (dataConversionInput) {
     shouldConvert = true;
@@ -39,45 +41,43 @@ function getUserValues(event) {
   locationValue = domElements.locationInput.value;
   if (!locationValue) {
     let error = displayLoading();
-    error.textContent = `Oops an error occured location can not be empty!`
+    error.textContent = `Oops an error occured location can not be empty!`;
     return;
   }
   if (forecastInput.value < 0 || forecastInput.value > 14) {
     let error = displayLoading();
-    error.textContent = `Oops an error occured! Minimum days for forecast is 0 and maximum is 15!`
+    error.textContent = `Oops an error occured! Minimum days for forecast is 0 and maximum is 15!`;
     return;
   }
   queryUrl = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${locationValue}?key=${weatherKey}`;
   forecastLength = Number(domElements.forecastInput.value) + 1;
   clearForm(dataConversionInput);
-  getWeatherData()
+  getWeatherData();
 }
 
 async function getWeatherData() {
   let loadingDiv;
   try {
     loadingDiv = displayLoading();
-    let response = await fetch(queryUrl, {mode: 'cors'});
+    let response = await fetch(queryUrl, { mode: 'cors' });
     if (response.ok) {
-      for (let div of errorDivs){
+      for (let div of errorDivs) {
         removeError(div);
       }
       response = await response.json();
-      console.log(response)
+      console.log(response);
       let weatherData = unpackData(response);
       displayCurrentDay(weatherData.today);
       displayForecast(weatherData.forecast);
       changeBackground(weatherData.today.icon);
       changeForecastBackground(weatherData.forecast);
-    }
-    else if (response.status == 400) {
-      loadingDiv.textContent = 'Oops an error occured! Location entered may be invalid.';
-    }
-    else {
+    } else if (response.status == 400) {
+      loadingDiv.textContent =
+        'Oops an error occured! Location entered may be invalid.';
+    } else {
       loadingDiv.textContent = 'Oops an error occured!';
     }
-  }
-  catch (err) {
+  } catch (err) {
     console.log(err);
     loadingDiv.textContent = 'Oops an error occured!';
   }
@@ -85,15 +85,37 @@ async function getWeatherData() {
 
 // Retrieve the essential weather data
 function unpackData(obj) {
-  let {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow} = obj.currentConditions;
-  let today = {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow};
+  let {
+    temp,
+    conditions,
+    cloudcover,
+    feelslike,
+    humidity,
+    icon,
+    visibility,
+    windspeed,
+    precip,
+    snow,
+  } = obj.currentConditions;
+  let today = {
+    temp,
+    conditions,
+    cloudcover,
+    feelslike,
+    humidity,
+    icon,
+    visibility,
+    windspeed,
+    precip,
+    snow,
+  };
   today.description = obj.description;
 
   if (shouldConvert) {
     today.temp = tempConversion(today.temp);
   }
   let forecast = obj.days;
-  return {today, forecast};
+  return { today, forecast };
 }
 
 // Use a gif as background image
@@ -101,17 +123,16 @@ async function changeBackground(summary) {
   let backgroundImg = summary;
   let gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${backgroundImg}`;
   try {
-    let response = await fetch(gifQuery, {mode: 'cors'});
+    let response = await fetch(gifQuery, { mode: 'cors' });
     if (response.ok) {
       response = await response.json();
-      console.log(response);  
+      console.log(response);
       let imageUrl = response.data.images.original.url;
-      const div = document.querySelector('.dataDiv')
+      const div = document.querySelector('.dataDiv');
       div.style.backgroundImage = `url(${imageUrl})`;
       div.style.backgroundSize = 'cover';
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.log(error);
   }
 }
@@ -124,7 +145,7 @@ async function changeForecastBackground(infoArr) {
   let imageUrlArr = [];
   for (let day of arr) {
     let gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${day.icon}`;
-    let response = await fetch(gifQuery, {mode: 'cors'});
+    let response = await fetch(gifQuery, { mode: 'cors' });
     if (response.ok) {
       response = await response.json();
       let imageUrl = response.data.images.original.url;
@@ -140,7 +161,7 @@ async function changeForecastBackground(infoArr) {
 
 function displayCurrentDay(obj) {
   domElements.heading.textContent = `Displaying Weather Conditions For ${locationValue}`;
-  
+
   // const divInfo = document.querySelector('#today');
   domElements.todayDiv.innerHTML = '';
   if (!obj.precip) {
@@ -168,11 +189,11 @@ function displayCurrentDay(obj) {
   </div>`;
 
   // Only display snow for snowy areas
-  if (obj.snow){
-      const snowPara = document.createElement('p');
-      const dataDiv = document.querySelector('.dataDiv');
-      snowPara.innerHTML = `The amount of snow fell or predicted to fall is ${obj.snow}.`;
-      dataDiv.appendChild(snowPara);
+  if (obj.snow) {
+    const snowPara = document.createElement('p');
+    const dataDiv = document.querySelector('.dataDiv');
+    snowPara.innerHTML = `The amount of snow fell or predicted to fall is ${obj.snow}.`;
+    dataDiv.appendChild(snowPara);
   }
 }
 
@@ -182,8 +203,30 @@ function displayForecast(arr) {
   console.log(array);
   for (let day of array) {
     const dayDiv = document.createElement('div');
-    let {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow} = day;
-    let today = {temp, conditions, cloudcover, feelslike, humidity, icon, visibility, windspeed, precip, snow};
+    let {
+      temp,
+      conditions,
+      cloudcover,
+      feelslike,
+      humidity,
+      icon,
+      visibility,
+      windspeed,
+      precip,
+      snow,
+    } = day;
+    let today = {
+      temp,
+      conditions,
+      cloudcover,
+      feelslike,
+      humidity,
+      icon,
+      visibility,
+      windspeed,
+      precip,
+      snow,
+    };
     today.description = day.description;
 
     let date = day.datetime;
@@ -197,7 +240,7 @@ function displayForecast(arr) {
     } else {
       symbol = '&deg;F';
     }
-  
+
     dayDiv.innerHTML = `
       <p>${date}'s weather condition is: ${today.conditions}.</p>
       <p>The outlook is: ${today.description}.</p>
@@ -207,13 +250,13 @@ function displayForecast(arr) {
       <p>The visibility is: ${today.visibility}</p>
       <p>The amount of precipitation fell or predicted to fall is: ${today.precip}.</p>
       <p>The wind speed is: ${today.windspeed} knots.</p>`;
-  
+
     // Only display snow for snowy areas
-    if (today.snow){
+    if (today.snow) {
       const snowPara = document.createElement('p');
       snowPara.innerHTML = `The amount of snow fell or predicted to fall is: ${today.snow}.`;
       dayDiv.appendChild(snowPara);
-    }  
+    }
     domElements.forecastDiv.appendChild(dayDiv);
     dayDiv.classList.add('forecastDay');
   }
@@ -231,7 +274,7 @@ function displayLoading() {
 }
 
 function tempConversion(temperature) {
-  return (temperature - 32) * 5/9;
+  return ((temperature - 32) * 5) / 9;
 }
 
 function clearForm(checkbox) {
@@ -243,5 +286,5 @@ function clearForm(checkbox) {
 }
 
 function removeError(element) {
-  weatherInfo.removeChild(element)
+  weatherInfo.removeChild(element);
 }
