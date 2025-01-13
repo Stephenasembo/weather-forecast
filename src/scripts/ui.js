@@ -1,5 +1,5 @@
 import domElements from './dom';
-import { apiKeys } from './utilis';
+import { apiKeys, tempConversion } from './utilis';
 
 const errorDivs = [];
 
@@ -18,7 +18,7 @@ function removeError(element) {
   domElements.weatherInfo.removeChild(element);
 }
 
-function displayCurrentDay(obj) {
+function displayCurrentDay(obj, convertTemp) {
   domElements.heading.textContent = `Displaying Weather Conditions For ${locationValue}`;
 
   domElements.todayDiv.innerHTML = '';
@@ -28,7 +28,7 @@ function displayCurrentDay(obj) {
   }
 
   let symbol;
-  if (shouldConvert) {
+  if (convertTemp) {
     newObj.temp = tempConversion(obj.temp);
     symbol = '&deg;C';
   } else {
@@ -56,7 +56,7 @@ function displayCurrentDay(obj) {
   }
 }
 
-function displayForecast(arr) {
+function displayForecast(arr, convertTemp) {
   domElements.forecastDiv.innerHTML = '';
   const array = arr.slice(1, forecastLength);
   array.forEach((day) => {
@@ -91,7 +91,7 @@ function displayForecast(arr) {
       today.precip = 0;
     }
     let symbol;
-    if (shouldConvert) {
+    if (convertTemp) {
       symbol = '&deg;C';
     } else {
       symbol = '&deg;F';

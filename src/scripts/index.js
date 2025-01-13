@@ -22,8 +22,8 @@ async function getWeatherData() {
       });
       response = await response.json();
       const weatherData = unpackData(response);
-      displayCurrentDay(weatherData.today);
-      displayForecast(weatherData.forecast);
+      displayCurrentDay(weatherData.today, shouldConvert);
+      displayForecast(weatherData.forecast, shouldConvert);
       changeBackground(weatherData.today.icon);
       changeForecastBackground(weatherData.forecast);
     } else if (response.status === 400) {
