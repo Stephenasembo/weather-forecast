@@ -5,6 +5,7 @@ import {
   errorDivs,
 } from './ui';
 import { clearForm, unpackData, apiKeys } from './utilis';
+import '../styles/styles.css';
 
 let queryUrl;
 let forecastLength = null;
