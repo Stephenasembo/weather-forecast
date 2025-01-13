@@ -18,8 +18,8 @@ function removeError(element) {
   domElements.weatherInfo.removeChild(element);
 }
 
-function displayCurrentDay(obj, convertTemp) {
-  domElements.heading.textContent = `Displaying Weather Conditions For ${locationValue}`;
+function displayCurrentDay(obj, convertTemp, location) {
+  domElements.heading.textContent = `Displaying Weather Conditions For ${location}`;
 
   domElements.todayDiv.innerHTML = '';
   const newObj = obj;
@@ -56,9 +56,9 @@ function displayCurrentDay(obj, convertTemp) {
   }
 }
 
-function displayForecast(arr, convertTemp) {
+function displayForecast(arr, convertTemp, forecastDaysLength) {
   domElements.forecastDiv.innerHTML = '';
-  const array = arr.slice(1, forecastLength);
+  const array = arr.slice(1, forecastDaysLength);
   array.forEach((day) => {
     const dayDiv = document.createElement('div');
     const {
@@ -134,14 +134,14 @@ async function changeBackground(summary) {
   }
 }
 
-async function changeForecastBackground(infoArr) {
+async function changeForecastBackground(infoArr, forecastDaysLength) {
   let forecastDayDivs = document.querySelectorAll('.forecastDay');
   forecastDayDivs = Array.from(forecastDayDivs);
-  const arr = infoArr.slice(1, forecastLength);
+  const arr = infoArr.slice(1, forecastDaysLength);
   const imageUrlArr = [];
 
   arr.forEach((day) => {
-    const gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${gifyKey}&s=${day.icon}`;
+    const gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${apiKeys.gifyKey}&s=${day.icon}`;
     fetch(gifQuery, { mode: 'cors' })
       .then((responseResult) => {
         if (responseResult.ok) {

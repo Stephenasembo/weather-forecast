@@ -4,7 +4,7 @@ import {
   displayForecast, changeBackground, changeForecastBackground,
   errorDivs,
 } from './ui';
-import { clearForm, tempConversion, unpackData, apiKeys } from './utilis';
+import { clearForm, unpackData, apiKeys } from './utilis';
 
 let queryUrl;
 let forecastLength = null;
@@ -21,11 +21,11 @@ async function getWeatherData() {
         removeError(div);
       });
       response = await response.json();
-      const weatherData = unpackData(response);
-      displayCurrentDay(weatherData.today, shouldConvert);
-      displayForecast(weatherData.forecast, shouldConvert);
+      const weatherData = unpackData(response, shouldConvert);
+      displayCurrentDay(weatherData.today, shouldConvert, locationValue);
+      displayForecast(weatherData.forecast, shouldConvert, forecastLength);
       changeBackground(weatherData.today.icon);
-      changeForecastBackground(weatherData.forecast);
+      changeForecastBackground(weatherData.forecast, forecastLength);
     } else if (response.status === 400) {
       loadingDiv.textContent = `Oops an error occured!
       Location entered may be invalid.`;

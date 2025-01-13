@@ -3,7 +3,7 @@ import domElements from './dom';
 const apiKeys = {
   weatherKey: '28SUAPEDEBK3W6FMPLKTFMRFY',
   gifyKey: '7uCiKGp7r7hEKsspvlhqflcCvrQHKFis',
-}
+};
 function clearForm(checkbox) {
   domElements.locationInput.value = '';
   domElements.forecastInput.value = '';
@@ -18,7 +18,7 @@ function tempConversion(temperature) {
 }
 
 // Retrieve the essential weather data
-function unpackData(obj) {
+function unpackData(obj, convertTemp) {
   const {
     temp,
     conditions,
@@ -45,11 +45,13 @@ function unpackData(obj) {
   };
   today.description = obj.description;
 
-  if (shouldConvert) {
+  if (convertTemp) {
     today.temp = tempConversion(today.temp);
   }
   const forecast = obj.days;
   return { today, forecast };
 }
 
-export { clearForm, tempConversion, unpackData, apiKeys };
+export {
+  clearForm, tempConversion, unpackData, apiKeys,
+};
