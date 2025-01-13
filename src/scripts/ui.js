@@ -140,6 +140,7 @@ async function changeForecastBackground(infoArr, forecastDaysLength) {
   const arr = infoArr.slice(1, forecastDaysLength);
   const imageUrlArr = [];
 
+  let imageDiv = 0;
   arr.forEach((day) => {
     const gifQuery = `https://api.giphy.com/v1/gifs/translate?api_key=${apiKeys.gifyKey}&s=${day.icon}`;
     fetch(gifQuery, { mode: 'cors' })
@@ -148,7 +149,10 @@ async function changeForecastBackground(infoArr, forecastDaysLength) {
           responseResult.json()
             .then((responseData) => {
               const imageUrl = responseData.data.images.original.url;
-              imageUrlArr.push(imageUrl);
+              // imageUrlArr.push(imageUrl);
+              forecastDayDivs[imageDiv].style.backgroundImage = `url(${imageUrl})`;
+              forecastDayDivs[imageDiv].style.backgroundSize = 'cover';
+              imageDiv += 1;
             });
         }
       });
